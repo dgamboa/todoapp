@@ -111,11 +111,27 @@
         .then(function(jsonResponse) {
           console.log('response', jsonResponse);
           const li = document.createElement('li');
-          li.innerText = desc;
+
+          const checkbox = document.createElement('input');
+          checkbox.className = 'check-completed';
+          checkbox.type = 'checkbox';
+          checkbox.setAttribute('data-id', jsonResponse.id);
+          li.appendChild(checkbox);
+
+          const text = document.createTextNode(' ' + jsonResponse.description);
+          li.appendChild(text);
+
+          const delButton = document.createElement('button');
+          delButton.className = 'delete-buttons';
+          delButton.setAttribute('data-id', jsonResponse.id);
+          delButton.innerHTML = '&cross;';
+          li.appendChild(delButton);
+
           document.getElementById('todos').appendChild(li);
           document.getElementById('error').className = 'hidden';
         })
         .catch(function() {
+          console.error('Error occurred');
           document.getElementById('error').className = '';
         })
       }
