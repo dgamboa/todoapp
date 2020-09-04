@@ -39,12 +39,31 @@
       <li>
         <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}>
         {{ d.description }}
-        <button id="delete-button" data-id="{{ d.id }}">&cross;</button>
+        <button class="delete-buttons" data-id="{{ d.id }}">&cross;</button>
       </li>
       {% endfor %}
     </ul>
     <script>
-
+      const delButtons = document.querySelectorAll('.delete-buttons');
+      for (let i = 0; i < delButtons.length; i++) {
+        const delButton = delButtons[i];
+        delButton.onclick = function(e) {
+          console.log('event', e);
+          const delId = e.target.dataset['id'];
+          fetch('/todos/' + delId + '/delete' , {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            }
+          })
+          .then(function() {
+            document.getElementById('error').className = 'hidden';
+          })
+          .catch(function() {
+            document.getElementById('error').className = '';
+          })
+        }
+      }
 
       const checkboxes = document.querySelectorAll('.check-completed');
       for (let i = 0; i < checkboxes.length; i++) {
@@ -70,6 +89,7 @@
           })
         }
       }
+
       const descInput = document.getElementById('description');
       document.getElementById('form').onsubmit = function(e) {
         e.preventDefault();

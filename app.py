@@ -51,8 +51,19 @@ def set_completed_todo(todo_id):
         db.session.rollback()
     finally:
         db.session.close()
-    return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
+@app.route('/todos/<todo_id>/delete', methods=['GET'])
+def delete(todo_id):
+    try:
+        toDelete = Todo.query.get(todo_id)
+        db.session.delete(toDelete)
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return redirect(url_for('index'))
 
 @app.route('/')
 def index():
