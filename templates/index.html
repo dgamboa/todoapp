@@ -50,11 +50,8 @@
         delButton.onclick = function(e) {
           console.log('event', e);
           const delId = e.target.dataset['id'];
-          fetch('/todos/' + delId + '/delete' , {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            }
+          fetch('/todos/' + delId , {
+            method: 'DELETE',
           })
           .then(function() {
             document.getElementById('error').className = 'hidden';
