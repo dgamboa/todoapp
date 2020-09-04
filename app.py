@@ -63,7 +63,7 @@ def delete(todo_id):
         db.session.rollback()
     finally:
         db.session.close()
-    return redirect(url_for('index'))
+    return jsonify({ 'success': True })
 
 @app.route('/')
 def index():
