@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Todo App</title>
+    <style>
+      #error {
+        display: none;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        width: 200px;
+      }
+      li {
+        clear: both;
+      }
+      li button {
+        -webkit-appearance: none;
+        background-color: #fff;
+        border: none;
+        color: red;
+        cursor: pointer;
+        float: right;
+        font-size: 20px;
+        outline: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="error" class="hidden">Something went wrong!</div>
+    <form id="form" method="post" action="/todos/create">
+      <input type="text" id="description" name="description">
+      <input type="submit" value="Create">
+    </form>
+    <ul id="todos">
+      {% for d in data %}
+      <li>
+        <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}>
+        {{ d.description }}
+        <button id="delete-button" data-id="{{ d.id }}">&cross;</button>
+      </li>
+      {% endfor %}
+    </ul>
+    <script>
+
+
+      const checkboxes = document.querySelectorAll('.check-completed');
+      for (let i = 0; i < checkboxes.length; i++) {
+        const checkbox = checkboxes[i];
+        checkbox.onchange = function(e) {
+          console.log('event', e);
+          const newCompleted = e.target.checked;
+          const todoId = e.target.dataset['id'];
+          fetch('/todos/' + todoId + '/set-completed', {
+            method: 'POST',
+            body: JSON.stringify({
+              'completed': newCompleted
+            }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          })
+          .then(function() {
+            document.getElementById('error').className = 'hidden';
+          })
+          .catch(function() {
+            document.getElementById('error').className = '';
+          })
+        }
+      }
+      const descInput = document.getElementById('description');
+      document.getElementById('form').onsubmit = function(e) {
+        e.preventDefault();
+        const desc = descInput.value;
+        descInput.value = '';
+        fetch('/todos/create', {
+          method: 'POST',
+          body: JSON.stringify({
+            'description': desc,
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(jsonResponse) {
+          console.log('response', jsonResponse);
+          const li = document.createElement('li');
+          li.innerText = desc;
+          document.getElementById('todos').appendChild(li);
+          document.getElementById('error').className = 'hidden';
+        })
+        .catch(function() {
+          document.getElementById('error').className = '';
+        })
+      }
+    </script>
+  </body>
+</html>
