@@ -35,11 +35,11 @@
       <input type="submit" value="Create">
     </form>
     <ul id="todos">
-      {% for d in data %}
+      {% for todo in todos %}
       <li>
-        <input class="check-completed" data-id="{{ d.id }}" type="checkbox" {% if d.completed %} checked {% endif %}>
-        {{ d.description }}
-        <button class="delete-buttons" data-id="{{ d.id }}">&cross;</button>
+        <input class="check-completed" data-id="{{ todo.id }}" type="checkbox" {% if todo.completed %} checked {% endif %}>
+        {{ todo.description }}
+        <button class="delete-buttons" data-id="{{ todo.id }}">&cross;</button>
       </li>
       {% endfor %}
     </ul>

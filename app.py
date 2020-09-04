@@ -51,7 +51,7 @@ def set_completed_todo(todo_id):
         db.session.rollback()
     finally:
         db.session.close()
-        return redirect(url_for('index'))
+    return redirect(url_for('index'))
 
 @app.route('/todos/<todo_id>/delete', methods=['GET'])
 def delete(todo_id):
@@ -67,4 +67,4 @@ def delete(todo_id):
 
 @app.route('/')
 def index():
-    return render_template('index.html', data=Todo.query.order_by('id').all())
+    return render_template('index.html', todos=Todo.query.order_by('id').all())
