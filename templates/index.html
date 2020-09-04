@@ -54,6 +54,10 @@
             method: 'DELETE',
           })
           .then(function() {
+            const item = e.target.parentElement;
+            item.remove();
+          })
+          .then(function() {
             document.getElementById('error').className = 'hidden';
           })
           .catch(function() {
