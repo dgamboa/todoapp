@@ -16,7 +16,7 @@ class TodoList(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
     completed = db.Column(db.Boolean, nullable=False, default=False)
-    todos = db.relationship('Todo', backref='list', lazy=True)
+    todos = db.relationship('Todo', backref='list', lazy=True, cascade="all, delete-orphan")
 
     def __repr__(self):
         return f'<TodoList {self.id} {self.name}>'
@@ -87,6 +87,8 @@ def set_completed_list(list_id):
         completedList = request.get_json()['completed']
         list = TodoList.query.get(list_id)
         list.completed = completedList
+        for todo in list.todos:
+            todo.completed = completedList
         db.session.commit()
     except:
         db.session.rollback()
@@ -108,6 +110,19 @@ def set_completed_todo(todo_id):
         db.session.close()
     return redirect(url_for('index'))
 
+# Function to delete a to do list
+@app.route('/todolists/<list_id>', methods=['DELETE'])
+def delete_list(list_id):
+    try:
+        listDelete = TodoList.query.get(list_id)
+        db.session.delete(listDelete)
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return jsonify({ 'success': True })
+
 # Function to delete a to do item
 @app.route('/todos/<todo_id>', methods=['DELETE'])
 def delete(todo_id):
@@ -125,7 +140,7 @@ def delete(todo_id):
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
     return render_template('index.html',
-    lists=TodoList.query.all(),
+    lists=TodoList.query.order_by('id').all(),
     active_list=TodoList.query.get(list_id),
     todos=Todo.query.filter_by(list_id=list_id).order_by('id').all()
     )

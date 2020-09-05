@@ -46,6 +46,7 @@
         <li>
           <input class="completed-list" data-id="{{ list.id }}" type="checkbox" {% if list.completed %} checked {% endif %}>
           <a href="/lists/{{ list.id }}">{{ list.name }}</a>
+          <button class="delete-list" data-id="{{ list.id }}">&cross;</button>
         </li>
         {% endfor %}
       </ul>
@@ -92,25 +93,25 @@
           console.log('response', jsonResponse);
           const li = document.createElement('li');
 
-          // const checkbox = document.createElement('input');
-          // checkbox.className = 'check-completed';
-          // checkbox.type = 'checkbox';
-          // checkbox.setAttribute('data-id', jsonResponse.id);
-          // li.appendChild(checkbox);
+          const checkboxForList = document.createElement('input');
+          checkboxForList.className = 'completed-list';
+          checkboxForList.type = 'checkbox';
+          checkboxForList.setAttribute('data-id', jsonResponse.id);
+          li.appendChild(checkboxForList);
 
           const nameText = document.createTextNode(' ' + jsonResponse.name);
           li.appendChild(nameText);
 
-          // const delButton = document.createElement('button');
-          // delButton.className = 'delete-buttons';
-          // delButton.setAttribute('data-id', jsonResponse.id);
-          // delButton.innerHTML = '&cross;';
-          // li.appendChild(delButton);
+          const delListButton = document.createElement('button');
+          delListButton.className = 'delete-list';
+          delListButton.setAttribute('data-id', jsonResponse.id);
+          delListButton.innerHTML = '&cross;';
+          li.appendChild(delListButton);
 
           document.getElementById('lists').appendChild(li);
         })
         .catch(function() {
-          console.error('Error occurred');
+          console.error('Error occurred with create list attempt');
         })
       }
 
@@ -156,9 +157,33 @@
           document.getElementById('error').className = 'hidden';
         })
         .catch(function() {
-          console.error('Error occurred');
+          console.error('Error occurred with create item attempt');
           document.getElementById('error').className = '';
         })
+      }
+
+      // Delete a to do list
+      const delLists = document.querySelectorAll('.delete-list');
+      for (let i = 0; i < delLists.length; i++) {
+        const delList = delLists[i];
+        delList.onclick = function(e) {
+          console.log('event', e);
+          const delListId = e.target.dataset['id'];
+          fetch('/todolists/' + delListId , {
+            method: 'DELETE',
+          })
+          .then(function() {
+            const item = e.target.parentElement;
+            item.remove();
+          })
+          .then(function() {
+            // document.getElementById('error').className = 'hidden';
+          })
+          .catch(function() {
+            console.error('Error occurred with delete list attempt');
+            // document.getElementById('error').className = '';
+          })
+        }
       }
 
       // Delete a to do item
@@ -205,7 +230,7 @@
             // document.getElementById('error').className = 'hidden';
           })
           .catch(function() {
-            console.error('Error occurred');
+            console.error('Error occurred with delete item attempt');
             // document.getElementById('error').className = '';
           })
         }
