@@ -99,8 +99,11 @@
           checkboxForList.setAttribute('data-id', jsonResponse.id);
           li.appendChild(checkboxForList);
 
+          const nameLink = document.createElement('a');
+          nameLink.href = "/lists/" + jsonResponse.id;
           const nameText = document.createTextNode(' ' + jsonResponse.name);
-          li.appendChild(nameText);
+          nameLink.appendChild(nameText);
+          li.appendChild(nameLink);
 
           const delListButton = document.createElement('button');
           delListButton.className = 'delete-list';
