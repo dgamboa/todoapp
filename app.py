@@ -10,6 +10,7 @@ db = SQLAlchemy(app)
 
 migrate = Migrate(app, db)
 
+# Model for the to do lists
 class TodoList(db.Model):
     __tablename__ = 'todolists'
     id = db.Column(db.Integer, primary_key=True)
@@ -19,6 +20,7 @@ class TodoList(db.Model):
     def __repr__(self):
         return f'<TodoList {self.id} {self.name}>'
 
+# Model for the to do items
 class Todo(db.Model):
     __tablename__ = 'todos'
     id = db.Column(db.Integer, primary_key=True)
@@ -29,6 +31,7 @@ class Todo(db.Model):
     def __repr__(self):
         return f'<Todo {self.id} {self.description}, list {self.list_id}>'
 
+# Function to create a new to do list
 @app.route('/todolists/create', methods=['POST'])
 def create_todolist():
     error = False
@@ -51,6 +54,7 @@ def create_todolist():
     else:
         return jsonify(body)
 
+# Function to create a new to do item
 @app.route('/todos/create', methods=['POST'])
 def create_todo():
     error = False
@@ -75,6 +79,7 @@ def create_todo():
     else:
         return jsonify(body)
 
+# Function to check a to do item as completed
 @app.route('/todos/<todo_id>/set-completed', methods=['POST'])
 def set_completed_todo(todo_id):
     try:
@@ -88,6 +93,7 @@ def set_completed_todo(todo_id):
         db.session.close()
     return redirect(url_for('index'))
 
+# Function to delete a to do item
 @app.route('/todos/<todo_id>', methods=['DELETE'])
 def delete(todo_id):
     try:
@@ -100,6 +106,7 @@ def delete(todo_id):
         db.session.close()
     return jsonify({ 'success': True })
 
+# Function to display the active to do list
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
     return render_template('index.html',
@@ -108,6 +115,7 @@ def get_list_todos(list_id):
     todos=Todo.query.filter_by(list_id=list_id).order_by('id').all()
     )
 
+# Home page route
 @app.route('/')
 def index():
     return redirect(url_for('get_list_todos', list_id=1))
