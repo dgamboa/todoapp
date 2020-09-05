@@ -37,6 +37,10 @@
 
     <div class="lists-wrapper">
       <h2>To Do Lists</h2>
+      <form id="form-list" method="post" action="/todolists/create">
+        <input type="text" id="list-name" name="list">
+        <input type="submit" value="Create">
+      </form>
       <ul id="lists">
         {% for list in lists %}
         <li>
@@ -48,7 +52,7 @@
 
     <div class="todos-wrapper">
       <h2>To Do Items</h2>
-      <form id="form" method="post" action="/todos/create">
+      <form id="form-item" method="post" action="/todos/create">
         <input type="text" id="description" name="description">
         <input type="submit" value="Create">
       </form>
@@ -65,6 +69,95 @@
       </ul>
     </div>
     <script>
+      const listInput = document.getElementById('list-name');
+      document.getElementById('form-list').onsubmit = function(e) {
+        e.preventDefault();
+        const name = listInput.value;
+        listInput.value = '';
+        fetch('/todolists/create', {
+          method: 'POST',
+          body: JSON.stringify({
+            'name': name, 
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(jsonResponse) {
+          console.log('response', jsonResponse);
+          const li = document.createElement('li');
+
+          // const checkbox = document.createElement('input');
+          // checkbox.className = 'check-completed';
+          // checkbox.type = 'checkbox';
+          // checkbox.setAttribute('data-id', jsonResponse.id);
+          // li.appendChild(checkbox);
+
+          const nameText = document.createTextNode(' ' + jsonResponse.name);
+          li.appendChild(nameText);
+
+          // const delButton = document.createElement('button');
+          // delButton.className = 'delete-buttons';
+          // delButton.setAttribute('data-id', jsonResponse.id);
+          // delButton.innerHTML = '&cross;';
+          // li.appendChild(delButton);
+
+          document.getElementById('lists').appendChild(li);
+        })
+        .catch(function() {
+          console.error('Error occurred');
+        })
+      }
+
+      const descInput = document.getElementById('description');
+      document.getElementById('form-item').onsubmit = function(e) {
+        e.preventDefault();
+        const desc = descInput.value;
+        descInput.value = '';
+        fetch('/todos/create', {
+          method: 'POST',
+          body: JSON.stringify({
+            'description': desc,
+            'list_id': {{ active_list.id }},
+          }),
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        })
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(jsonResponse) {
+          console.log('response', jsonResponse);
+          const li = document.createElement('li');
+
+          const checkbox = document.createElement('input');
+          checkbox.className = 'check-completed';
+          checkbox.type = 'checkbox';
+          checkbox.setAttribute('data-id', jsonResponse.id);
+          li.appendChild(checkbox);
+
+          const text = document.createTextNode(' ' + jsonResponse.description);
+          li.appendChild(text);
+
+          const delButton = document.createElement('button');
+          delButton.className = 'delete-buttons';
+          delButton.setAttribute('data-id', jsonResponse.id);
+          delButton.innerHTML = '&cross;';
+          li.appendChild(delButton);
+
+          document.getElementById('todos').appendChild(li);
+          document.getElementById('error').className = 'hidden';
+        })
+        .catch(function() {
+          console.error('Error occurred');
+          document.getElementById('error').className = '';
+        })
+      }
+
       const delButtons = document.querySelectorAll('.delete-buttons');
       for (let i = 0; i < delButtons.length; i++) {
         const delButton = delButtons[i];
@@ -110,52 +203,6 @@
             document.getElementById('error').className = '';
           })
         }
-      }
-
-      const descInput = document.getElementById('description');
-      document.getElementById('form').onsubmit = function(e) {
-        e.preventDefault();
-        const desc = descInput.value;
-        descInput.value = '';
-        fetch('/todos/create', {
-          method: 'POST',
-          body: JSON.stringify({
-            'description': desc,
-            'list_id': {{ active_list.id }},
-          }),
-          headers: {
-            'Content-Type': 'application/json',
-          }
-        })
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(jsonResponse) {
-          console.log('response', jsonResponse);
-          const li = document.createElement('li');
-
-          const checkbox = document.createElement('input');
-          checkbox.className = 'check-completed';
-          checkbox.type = 'checkbox';
-          checkbox.setAttribute('data-id', jsonResponse.id);
-          li.appendChild(checkbox);
-
-          const text = document.createTextNode(' ' + jsonResponse.description);
-          li.appendChild(text);
-
-          const delButton = document.createElement('button');
-          delButton.className = 'delete-buttons';
-          delButton.setAttribute('data-id', jsonResponse.id);
-          delButton.innerHTML = '&cross;';
-          li.appendChild(delButton);
-
-          document.getElementById('todos').appendChild(li);
-          document.getElementById('error').className = 'hidden';
-        })
-        .catch(function() {
-          console.error('Error occurred');
-          document.getElementById('error').className = '';
-        })
       }
     </script>
   </body>

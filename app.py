@@ -29,6 +29,28 @@ class Todo(db.Model):
     def __repr__(self):
         return f'<Todo {self.id} {self.description}, list {self.list_id}>'
 
+@app.route('/todolists/create', methods=['POST'])
+def create_todolist():
+    error = False
+    body = {}
+    try:
+        list_name = request.get_json()['name']
+        list = TodoList(name=list_name)
+        db.session.add(list)
+        db.session.commit()
+        body['id'] = list.id
+        body['name'] = list.name
+    except:
+        error = True
+        db.session.rollback()
+        print(sys.exc_info())
+    finally:
+        db.session.close()
+    if error:
+        abort (400)
+    else:
+        return jsonify(body)
+
 @app.route('/todos/create', methods=['POST'])
 def create_todo():
     error = False
