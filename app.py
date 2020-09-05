@@ -15,6 +15,7 @@ class TodoList(db.Model):
     __tablename__ = 'todolists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), nullable=False)
+    completed = db.Column(db.Boolean, nullable=False, default=False)
     todos = db.relationship('Todo', backref='list', lazy=True)
 
     def __repr__(self):
@@ -26,7 +27,7 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
     completed = db.Column(db.Boolean, nullable=False, default=False)
-    list_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=True)
+    list_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=False)
 
     def __repr__(self):
         return f'<Todo {self.id} {self.description}, list {self.list_id}>'
@@ -78,6 +79,20 @@ def create_todo():
         abort (400)
     else:
         return jsonify(body)
+
+# Function to check a to do list as completed
+@app.route('/todolists/<list_id>/set-completed', methods=['POST'])
+def set_completed_list(list_id):
+    try:
+        completedList = request.get_json()['completed']
+        list = TodoList.query.get(list_id)
+        list.completed = completedList
+        db.session.commit()
+    except:
+        db.session.rollback()
+    finally:
+        db.session.close()
+    return redirect(url_for('index'))
 
 # Function to check a to do item as completed
 @app.route('/todos/<todo_id>/set-completed', methods=['POST'])
