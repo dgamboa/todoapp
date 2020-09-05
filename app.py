@@ -24,7 +24,7 @@ class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     description = db.Column(db.String(), nullable=False)
     completed = db.Column(db.Boolean, nullable=False, default=False)
-    list_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=False)
+    list_id = db.Column(db.Integer, db.ForeignKey('todolists.id'), nullable=True)
 
     def __repr__(self):
         return f'<Todo {self.id} {self.description}, list {self.list_id}>'
@@ -35,7 +35,8 @@ def create_todo():
     body = {}
     try:
         description = request.get_json()['description']
-        todo = Todo(description=description, completed=False)
+        list_id = request.get_json()['list_id']
+        todo = Todo(description=description, completed=False, list_id=list_id)
         db.session.add(todo)
         db.session.commit()
         body['id'] = todo.id
@@ -79,7 +80,11 @@ def delete(todo_id):
 
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
-    return render_template('index.html', todos=Todo.query.filter_by(list_id=list_id).order_by('id').all())
+    return render_template('index.html',
+    lists=TodoList.query.all(),
+    active_list=TodoList.query.get(list_id),
+    todos=Todo.query.filter_by(list_id=list_id).order_by('id').all()
+    )
 
 @app.route('/')
 def index():
