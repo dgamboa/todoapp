@@ -1,7 +1,7 @@
 # To Do App
 
-## A simple to do app with multiple to do lists, each of which has multiple to do items
-The original version of the app is part of Udacity's Full Stack nanodegree.
+## A simple to do app (multiple to do lists, each with multiple to do items)
+The original version of the app is part of [Udacity's](https://udacity.com) Full Stack nanodegree.
 
 ### Functionality Added Independent of Udacity Tutorials
 - Feature 1 [x]: add a feature that allows the user to create a new to do list
