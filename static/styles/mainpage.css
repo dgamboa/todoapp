@@ -2,24 +2,29 @@
 body {
   display: block;
   flex-direction: column;
-  font-family: helvetica, arial, sans;
+  font-family: 'Kufam', helvetica, arial, sans;
   min-height: 100vh;
 }
 h1 {
-  font-family: helvetica, sans;
   font-size: 4vw;
   font-weight: 500;
-  margin: 40px 0;
+  margin: 40px 0 20px;
   text-align: center;
+}
+h3 {
+  text-align: center;
+  margin-bottom: 10px;
+  color: #555;
+  text-transform: uppercase;
 }
 ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  width: 300px;
 }
 li {
   clear: both;
+  margin-bottom: 1em;
 }
 li button {
   -webkit-appearance: none;
@@ -41,35 +46,87 @@ a:link, a:visited {
 a:hover {
   color: #000090;
 }
+::-webkit-input-placeholder {
+   font-style: italic;
+}
+:-moz-placeholder {
+   font-style: italic;
+}
+::-moz-placeholder {
+   font-style: italic;
+}
+:-ms-input-placeholder {
+   font-style: italic;
+}
+#date {
+  margin-bottom: 30px;
+}
 
 /* LIST AND ITEMS CONTAINER */
 .list-items-parent {
   box-sizing: border-box;
   padding: 2em 10em;
-  align-items: center;
+  align-items: flex-start;
   display: flex;
   flex-wrap: wrap;
   overflow: hidden;
+  justify-content: center;
 }
 
-/* LISTS */
-.lists-wrapper {
+.list-items-parent > div {
   flex: 1;
-  background-color: #fffff0;
-  margin: 0 2em;
+  margin: 0 2em 40px;
   padding: 2em 1em;
   border: 1px solid #bbb;
   box-shadow: 4px 4px 2px #ededed;
+}
+h2 {
+  font-size: 1.5em;
+  text-align: center;
+  border-bottom: solid 1px #999;
+  margin-bottom: 1em;
+}
+
+
+/* LISTS */
+.lists-wrapper {
+  background-color: #fffff0;
+  max-width: 30%;
+  min-width: 380px;
 }
 
 /* ITEMS */
 .todos-wrapper {
-  flex: 1;
   background-color: #f0ffff;
-  margin: 0 2em;
-  padding: 2em 1em;
-  border: 1px solid #bbb;
-  box-shadow: 4px 4px 2px #ededed;
+  max-width: 30%;
+  min-width: 380px;
+}
+h4 {
+  padding-bottom: 0.5em;
+  margin-bottom: 1em;
+  text-align: center;
+  border-bottom: solid 1px #eee;
+  font-size: 1.1em;
+  color: rgba(20,20,20,0.6);
+}
+
+/* INPUT BOXES */
+#form-list, #form-item {
+  margin: 1em 0 2em 0;
+}
+
+#description, #list-name {
+  width: 16em;
+}
+
+.create-button {
+  width: 5em;
+  background-color: #00ab00;
+  color: white;
+}
+.create-button:hover {
+  background-color: #009500;
+  cursor: pointer;
 }
 
 /* ERROR DEFAULT */
