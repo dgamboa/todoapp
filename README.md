@@ -14,12 +14,14 @@ The original version of the app is part of [Udacity's](https://udacity.com) Full
   - Bug 4 [x]: checkboxes don't show up until after refresh when creating a new list
   - Bug 5 [ ]: the behavior of complete all items in a list needs further testing (i.e. what happens when we uncheck the list? Should all items become unchecked or should it revert to some previous state?)
   - Bug 6 [x]: when you add a list, it doesn't add it as a link
-- Update 1 [ ]: style the page (positioning, background and borders, width)
+- Update 1 [x]: style the page (positioning, background and borders, width)
 - Update 2 [x]: add a readme file that tracks the difference between the Udacity basic app and this version along with any bugs
-- Update 3 [ ]: add a screenshot of the app in the readme file
+- Update 3 [x]: add a screenshot of the app in the readme file
 
 ### Functionality from Udacity
 - Basic ability to CRUD to do items
 - Database relationship between a to do item and a to do list
 - Simple index view with embedded styles and scripts
 - Simple controller with ability to add, delete and complete to do items
+
+![App Screenshot](app_screenshot.png)
